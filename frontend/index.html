@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agentic AI Interviewer — Antigravity</title>
+    <meta name="description"
+        content="Agentic AI Interviewer: Autonomous technical interview platform powered by advanced AI agents. Upload your resume, receive adaptive questions, and get deep performance insights." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- Layered background effects -->
+    <div class="bg-noise" aria-hidden="true"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
+    <div class="bg-radial-top" aria-hidden="true"></div>
+    <div class="bg-radial-bottom" aria-hidden="true"></div>
+    <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
+    <!-- ══════════════════════════════════════════
+       NAV BAR
+  ══════════════════════════════════════════ -->
+    <nav class="nav-bar" role="navigation" aria-label="Main navigation">
+        <div class="nav-inner">
+            <div class="nav-logo">
+                <div class="nav-orb" aria-hidden="true"></div>
+                <span class="nav-brand">Antigravity</span>
+                <span class="nav-slash">/</span>
+                <span class="nav-product">Interview</span>
+            </div>
+            <div class="nav-status">
+                <span class="status-ring" aria-hidden="true"></span>
+                <span class="status-text">Agent Online</span>
+                <span class="nav-ver">v2.0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════
+       HERO SECTION
+  ══════════════════════════════════════════ -->
+    <header class="hero" role="banner">
+        <div class="hero-eyebrow">
+            <span class="eyebrow-dot" aria-hidden="true"></span>
+            <span>Agentic AI · Autonomous Evaluation · Real-Time Feedback</span>
+        </div>
+
+        <h1 class="hero-title">
+            <span class="hero-word">Agentic</span>
+            <span class="hero-word accent">AI</span>
+            <span class="hero-word">Interviewer</span>
+        </h1>
+
+        <p class="hero-subtitle">Autonomous Technical Interview Platform</p>
+
+        <div class="hero-stats" role="list">
+            <div class="stat-pill" role="listitem">
+                <span class="stat-val">∞</span>
+                <span class="stat-label">Questions</span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-pill" role="listitem">
+                <span class="stat-val">AI</span>
+                <span class="stat-label">Evaluation</span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-pill" role="listitem">
+                <span class="stat-val">6</span>
+                <span class="stat-label">Modules</span>
+            </div>
+        </div>
+
+        <div class="hero-scroll-hint" aria-hidden="true">
+            <div class="scroll-arrow"></div>
+        </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════ -->
+    <main class="main-wrap">
+        <div class="pipeline-line" aria-hidden="true"></div>
+
+        <!-- ── 1. RESUME UPLOAD ─────────────────── -->
+        <section class="module" id="module-upload" aria-labelledby="upload-title">
+            <div class="module-step" aria-hidden="true">01</div>
+            <div class="card glass">
+                <div class="card-eyebrow">Resume Ingestion</div>
+                <h2 class="card-title" id="upload-title">Upload Your Resume</h2>
+                <p class="card-desc">The AI agent will parse your resume to tailor interview questions to your
+                    background and skill set.</p>
+
+                <label class="upload-zone" id="upload-zone" for="resume-file" tabindex="0"
+                    aria-label="Drag and drop or click to upload resume PDF">
+                    <div class="upload-zone-bg" aria-hidden="true"></div>
+                    <div class="upload-icon-wrap" aria-hidden="true">
+                        <svg class="upload-icon" viewBox="0 0 48 48" fill="none">
+                            <circle cx="24" cy="24" r="23" stroke="currentColor" stroke-width="1.2"
+                                stroke-dasharray="4 3" opacity="0.4" />
+                            <path d="M24 30V18M18 24l6-6 6 6" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M16 34h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                opacity="0.5" />
+                        </svg>
+                    </div>
+                    <p class="upload-main">Drop your resume here</p>
+                    <p class="upload-sub">or click to browse · PDF only</p>
+                    <div class="upload-selected" id="upload-selected"></div>
+                    <input type="file" id="resume-file" accept=".pdf" aria-label="Resume PDF file input" />
+                </label>
+
+                <div class="card-actions">
+                    <button id="upload-btn" class="btn btn-primary" onclick="uploadResume()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="16 16 12 12 8 16" />
+                            <line x1="12" y1="12" x2="12" y2="21" />
+                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                        </svg>
+                        Upload Resume
+                    </button>
+                </div>
+                <div id="upload-status" class="status-bar" role="status" aria-live="polite"></div>
+            </div>
+        </section>
+
+        <!-- ── 2. QUESTION GENERATION ────────────── -->
+        <section class="module" id="module-question" aria-labelledby="question-title">
+            <div class="module-step" aria-hidden="true">02</div>
+            <div class="card glass">
+                <div class="card-eyebrow">Agentic Question Engine</div>
+                <h2 class="card-title" id="question-title">Interview Question</h2>
+                <p class="card-desc">The agent retrieves context from your resume and synthesises a targeted technical
+                    question.</p>
+
+                <div class="gen-stages" id="gen-stages" aria-hidden="true">
+                    <div class="stage" id="stage-context">
+                        <span class="stage-dot"></span>
+                        <span>Retrieving Context</span>
+                    </div>
+                    <div class="stage-arrow" aria-hidden="true">→</div>
+                    <div class="stage" id="stage-generate">
+                        <span class="stage-dot"></span>
+                        <span>Generating Question</span>
+                    </div>
+                </div>
+
+                <button id="gen-btn" class="btn btn-neon" onclick="generateQuestion()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                    Generate Question
+                </button>
+
+                <div id="question-card" class="question-card hidden" role="region" aria-live="polite"
+                    aria-atomic="true">
+                    <div class="question-badge">Question</div>
+                    <p id="question-text" class="question-body"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── 3. ANSWER SUBMISSION ───────────────── -->
+        <section class="module" id="module-answer" aria-labelledby="answer-title">
+            <div class="module-step" aria-hidden="true">03</div>
+            <div class="card glass">
+                <div class="card-eyebrow">Candidate Response</div>
+                <h2 class="card-title" id="answer-title">Your Answer</h2>
+                <p class="card-desc">Respond in depth. The AI evaluates technical accuracy, clarity, and completeness.
+                </p>
+
+                <div class="textarea-wrap">
+                    <textarea id="answer-input" class="answer-area"
+                        placeholder="Write your full technical answer here. Be thorough — cover the concept, edge cases, and real-world application..."
+                        rows="8" aria-label="Your answer to the interview question"></textarea>
+                    <div class="char-counter" id="char-counter" aria-live="polite">0 characters</div>
+                </div>
+
+                <div class="card-actions">
+                    <button id="submit-btn" class="btn btn-primary" onclick="submitAnswer()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                        Submit Answer
+                    </button>
+                    <div id="eval-status" class="inline-status" role="status" aria-live="polite"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── 4. EVALUATION RESULT ───────────────── -->
+        <section class="module" id="module-result" aria-labelledby="result-title">
+            <div class="module-step" aria-hidden="true">04</div>
+            <div class="card glass result-glass" id="result-card">
+                <div class="card-eyebrow">AI Evaluation Report</div>
+                <h2 class="card-title" id="result-title">Performance Analysis</h2>
+
+                <!-- Empty state -->
+                <div class="result-empty" id="result-empty">
+                    <div class="empty-orbit" aria-hidden="true">
+                        <div class="orbit-ring r1"></div>
+                        <div class="orbit-ring r2"></div>
+                        <div class="orbit-dot"></div>
+                    </div>
+                    <p class="empty-hint">Submit your answer to receive a full AI evaluation</p>
+                </div>
+
+                <!-- Filled state -->
+                <div class="result-content hidden" id="result-content">
+
+                    <!-- Score block -->
+                    <div class="score-block">
+                        <div class="score-orbit-wrap" aria-hidden="true">
+                            <svg class="score-svg" viewBox="0 0 160 160" width="160" height="160">
+                                <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(56,189,248,0.08)"
+                                    stroke-width="10" />
+                                <circle id="score-arc" cx="80" cy="80" r="68" fill="none" stroke="url(#arcGrad)"
+                                    stroke-width="10" stroke-linecap="round" stroke-dasharray="427.26"
+                                    stroke-dashoffset="427.26" transform="rotate(-90 80 80)" />
+                                <defs>
+                                    <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#22d3ee" id="arc-stop-0" />
+                                        <stop offset="100%" stop-color="#818cf8" id="arc-stop-1" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="score-data">
+                            <div class="score-num-row">
+                                <span id="score-display" class="score-num">—</span>
+                                <span class="score-denom">/10</span>
+                            </div>
+                            <div class="score-grade" id="score-grade">Pending</div>
+                            <div class="score-label-text">Overall Performance</div>
+                        </div>
+                    </div>
+
+                    <!-- Insight grid -->
+                    <div class="insight-grid">
+                        <div class="insight-card insight-green">
+                            <div class="insight-header">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                <span>Strengths</span>
+                            </div>
+                            <p id="strengths-text" class="insight-body"></p>
+                        </div>
+
+                        <div class="insight-card insight-red">
+                            <div class="insight-header">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                <span>Weaknesses</span>
+                            </div>
+                            <p id="weaknesses-text" class="insight-body"></p>
+                        </div>
+
+                        <div class="insight-card insight-amber">
+                            <div class="insight-header">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                    <polyline points="17 6 23 6 23 12" />
+                                </svg>
+                                <span>Improvement</span>
+                            </div>
+                            <p id="improvement-text" class="insight-body"></p>
+                        </div>
+
+                        <div class="insight-card insight-purple">
+                            <div class="insight-header">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                                    aria-hidden="true">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                </svg>
+                                <span>Follow-up Question</span>
+                            </div>
+                            <p id="followup-text" class="insight-body"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── 5. CODE EXECUTION ──────────────────── -->
+        <section class="module" id="module-code" aria-labelledby="code-title">
+            <div class="module-step" aria-hidden="true">05</div>
+            <div class="card glass code-glass">
+                <div class="card-eyebrow">Live Code Sandbox</div>
+                <h2 class="card-title" id="code-title">Code Execution</h2>
+                <p class="card-desc">Write and run code directly. The agent evaluates both the logic and efficiency of
+                    your solution.</p>
+
+                <!-- VS Code–style editor chrome -->
+                <div class="vscode-wrap">
+                    <div class="vscode-titlebar">
+                        <div class="vscode-circles" aria-hidden="true">
+                            <span class="vc red"></span>
+                            <span class="vc yellow"></span>
+                            <span class="vc green"></span>
+                        </div>
+                        <div class="vscode-filename" id="vscode-filename">solution.py</div>
+                        <div class="vscode-right">
+                            <label for="lang-select" class="sr-only">Language</label>
+                            <select id="lang-select" class="lang-picker" onchange="updateFilename()"
+                                aria-label="Select programming language">
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="vscode-editor-row">
+                        <div class="vscode-gutter" id="gutter" aria-hidden="true">1</div>
+                        <textarea id="code-input" class="vscode-textarea" placeholder="# Write your solution here..."
+                            rows="14" spellcheck="false" autocorrect="off" autocapitalize="off"
+                            aria-label="Code editor"></textarea>
+                    </div>
+                    <div class="vscode-statusbar" aria-hidden="true">
+                        <span id="lang-status">Python</span>
+                        <span>UTF-8</span>
+                        <span>LF</span>
+                        <span id="cursor-pos">Ln 1, Col 1</span>
+                    </div>
+                </div>
+
+                <div class="card-actions">
+                    <button id="run-btn" class="btn btn-run" onclick="runCode()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polygon points="5 3 19 12 5 21 5 3" />
+                        </svg>
+                        Run Code
+                    </button>
+                    <button class="btn btn-ghost" onclick="clearEditor()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6l-1 14H6L5 6" />
+                            <path d="M10 11v6M14 11v6" />
+                            <path d="M9 6V4h6v2" />
+                        </svg>
+                        Clear
+                    </button>
+                    <div id="run-status" class="inline-status" role="status" aria-live="polite"></div>
+                </div>
+
+                <!-- Terminal output -->
+                <div class="terminal-shell">
+                    <div class="terminal-bar">
+                        <div class="terminal-dots" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="terminal-label">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <polyline points="4 17 10 11 4 5" />
+                                <line x1="12" y1="19" x2="20" y2="19" />
+                            </svg>
+                            Terminal Output
+                        </span>
+                        <button class="terminal-clear-btn" onclick="clearOutput()" aria-label="Clear output">⌫
+                            Clear</button>
+                    </div>
+                    <div id="code-output" class="terminal-body" role="log" aria-live="polite"
+                        aria-label="Code execution output">
+                        <span class="t-prompt">ag@interview:~$</span> Sandbox ready. Awaiting execution...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-logo">
+                <div class="nav-orb small" aria-hidden="true"></div>
+                <span>Antigravity AI</span>
+            </div>
+            <p class="footer-tagline">Autonomous · Adaptive · Agentic</p>
+            <p class="footer-copy">&copy; 2026 Antigravity AI Technologies. Built with intelligence.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
